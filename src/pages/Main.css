@@ -1,0 +1,60 @@
+/* Trang Main.css (hoặc tệp CSS tương tự) */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+tr:hover {
+  background-color: #ddd;
+}
+
+/* CSS cho nút "Edit" */
+.btn-edit {
+  background-color: #007bff; /* Màu xanh dương cho "Edit" */
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 5px; /* Bo tròn góc nút */
+}
+
+/* CSS cho nút "Delete" */
+.btn-delete {
+  background-color: #dc3545; /* Màu đỏ cho "Delete" */
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* CSS cho nút "View" */
+.btn-view {
+  background-color: #17a2b8; /* Màu xanh dương đậm cho "View" */
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Điều chỉnh hover effect */
+.btn-edit:hover,
+.btn-delete:hover,
+.btn-view:hover {
+  opacity: 0.8; /* Điều chỉnh độ trong suốt khi di chuột qua */
+}

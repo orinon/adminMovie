@@ -1,0 +1,38 @@
+/* Header.css */
+
+header {
+    background-color: #333; /* Màu nền của header */
+    color: white; /* Màu chữ trắng */
+    padding: 10px; /* Khoảng cách giữa nội dung và viền header */
+    display: flex;
+    justify-content: space-between; /* Căn chỉnh các phần tử ngang nhau */
+    align-items: center; /* Căn chỉnh theo chiều dọc giữa */
+  }
+  
+  .logo {
+    font-size: 24px; /* Kích thước chữ của logo */
+    font-weight: bold; /* In đậm chữ */
+  }
+  
+  nav ul {
+    list-style: none; /* Loại bỏ dấu gạch đầu dòng cho danh sách ul */
+    padding: 0; /* Xóa khoảng cách trong danh sách */
+    display: flex; /* Hiển thị các liên kết theo hàng ngang */
+  }
+  
+  nav li {
+    margin-right: 10px; /* Khoảng cách giữa các liên kết */
+  }
+  
+  nav a {
+    text-decoration: none; /* Loại bỏ gạch chân trên liên kết */
+    color: white; /* Màu chữ trắng cho liên kết */
+  }
+  
+  nav a.active {
+    font-weight: bold; /* In đậm chữ cho liên kết đang được chọn */
+    background-color: #555; /* Màu nền khác cho liên kết đang được chọn */
+    border-radius: 5px; /* Góc bo tròn cho liên kết đang được chọn */
+    padding: 5px 10px; /* Khoảng cách giữa nội dung và viền liên kết */
+    color: white; /* Màu chữ trắng cho liên kết đang được chọn */
+  }
