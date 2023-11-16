@@ -1,0 +1,25 @@
+/* Header.css */
+
+.header {
+  background-color: #007bff; /* Màu xanh chính của Bootstrap */
+}
+
+.header a {
+  color: #ffffff; /* Màu trắng cho các liên kết */
+}
+
+.header a:hover {
+  color: #ffffff; /* Màu trắng khi hover qua các liên kết */
+}
+
+.header .navbar-toggler-icon {
+  background-color: #ffffff; /* Màu trắng cho biểu tượng toggle */
+}
+
+.header .navbar-nav .nav-link {
+  color: #ffffff; /* Màu trắng cho các liên kết trong navbar */
+}
+
+.header .navbar-nav .nav-link:hover {
+  color: #ffffff; /* Màu trắng khi hover qua các liên kết trong navbar */
+}
