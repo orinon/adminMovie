@@ -5,11 +5,11 @@ import { toast } from "react-toastify";
 import DatePicker from "react-datepicker";
 import Select from "react-select";
 import "react-datepicker/dist/react-datepicker.css";
-import "./Edit.css";
+import "./EditBill.css";
 import { useParams,useNavigate } from "react-router-dom";
 
 
-function EditMovie() {
+function EditBill() {
   
   const [movieData, setMovieData] = useState({
     id: null, // Thêm id vào dữ liệu, ban đầu để giá trị null
@@ -28,43 +28,24 @@ function EditMovie() {
     director: "",
     actor: "",
   });
-  const genres = [
-    { value: "Phiêu lưu", label: "Phiêu lưu" },
-    { value: "Tưởng tượng", label: "Tưởng tượng" },
-    { value: "Hoạt hình", label: "Hoạt hình" },
-    { value: "Drama", label: "Drama" },
-    { value: "Kinh dị", label: "Kinh dị" },
-    { value: "Hành động", label: "Hành động"},
-    { value: "Hài kịch", label: "Hài kịch" },
-    { value: "Lịch sử", label: "Lịch sử" },
-    { value: "Miền tây", label: "Miền tây" },
-    { value: "Giật gân", label: "Giật gân"},
-    { value:  "Tội phạm", label:  "Tội phạm" },
-    { value: "Tài liệu", label: "Tài liệu"},
-    { value:  "Khoa học viễn tưởng", label: "Khoa học viễn tưởng"},
-    { value: "Bí ẩn", label:  "Bí ẩn"},
-    { value:  "Gia đình", label: "Gia đình"},
-    { value:  "Nhạc", label:  "Nhạc"},
-    { value:   "Lãng mạn", label: "Lãng mạn"},
-    { value:  "Chiến tranh", label: "Chiến tranh"},
-    { value:  "Truyền hình", label:  "Truyền hình"},
-  ];
+ 
   const {id} =useParams();
-  const [selectedGenres, setSelectedGenres] = useState([]);
+  
   const navigate = useNavigate();
   useEffect(() => {
     const db = getDatabase(app);
-    const dataRef = ref(db, "movieData");
+    const dataRef = ref(db, "bills");
     
-
+    console.log(id)
     onValue(dataRef, (snapshot) => {
         if (snapshot.exists()) {
           const rawData = snapshot.val();
           // Lọc dữ liệu theo id từ useParams
           const dataById = rawData[id];
+          console.log(id)
           if (dataById) {
-            const genreData = dataById.genre || []; // Thiết lập giá trị mặc định nếu là null hoặc không tồn tại
-            setMovieData({ ...dataById, genre: genreData });
+            // const genreData = dataById.genre || []; // Thiết lập giá trị mặc định nếu là null hoặc không tồn tại
+            // setMovieData({ ...dataById, genre: genreData });
             
           } else {
             console.log("No data available for this id");
@@ -102,12 +83,12 @@ function EditMovie() {
   
     if (name === 'trailer') {
       // Nếu người dùng nhập vào ô trailer, xử lý URL và lấy ID của video
-      const videoId = extractVideoIdFromUrl(value);
+      // const videoId = extractVideoIdFromUrl(value);
       
       // Cập nhật state chỉ khi người dùng nhập vào ô trailer
       setMovieData({
         ...movieData,
-        [name]: videoId,
+        // [name]: videoId,
       });
     } else {
       // Cập nhật state cho các trường khác
@@ -116,30 +97,6 @@ function EditMovie() {
         [name]: value,
       });
     }
-  };
-  const handleInputChangeGenre = (selectedGenres) => {
-    setMovieData({
-      ...movieData,
-      genre: selectedGenres.map((genre) => genre.value),
-    });
-  };
-  const extractVideoIdFromUrl = (url) => {
-    // Extract the video ID from a YouTube URL
-    // You can implement your own logic here, for simplicity let's assume it's the last part after '='
-    const urlParams = new URLSearchParams(new URL(url).search);
-    return urlParams.get('v') || '';
-  };
-  const imageurl = movieData.poster;
-  const backdropurl = movieData.backdrop;
-  const [showImage, setShowImage] = useState(false);
-
-  const toggleImage = () => {
-    setShowImage(!showImage);
-  };
-  const [showBackdrop, setShowBackdrop] = useState(false);
-
-  const toggleBackdrop = () => {
-    setShowBackdrop(!showBackdrop);
   };
   
   const handleDateChange = (date) => {
@@ -214,7 +171,7 @@ function EditMovie() {
           </label>
           <p className="form-control-static">{movieData.id}</p>
         </div>
-        {/* <div className="mb-3">
+        <div className="mb-3">
           <label htmlFor="poster" className="form-label">
             Poster:
           </label>
@@ -225,31 +182,8 @@ function EditMovie() {
             value={movieData.poster}
             onChange={handleInputChange}
           />
-          <img src={imageurl} alt={`Poster for ${movieData.title}`} />
-        </div> */}
+        </div>
         <div className="mb-3">
-          <label htmlFor="poster" className="form-label">
-            Poster:
-          </label>
-          <div className="input-group">
-            <input
-              type="text"
-              className="form-control"
-              name="poster"
-              value={movieData.poster}
-              onChange={handleInputChange}
-            />
-            <button
-              type="button"
-              className="btn btn-outline-secondary"
-              onClick={toggleImage}
-            >
-              {showImage ? "Ẩn ảnh" : "Hiển thị ảnh"}
-            </button>
-          </div>
-          {showImage && <img src={imageurl} style={{ width: "50%", height: "50%px" }}/>}
-          </div>
-        {/* <div className="mb-3">
           <label htmlFor="backdrop" className="form-label">
           backdrop:
           </label>
@@ -260,29 +194,7 @@ function EditMovie() {
             value={movieData.backdrop}
             onChange={handleInputChange}
           />
-        </div> */}
-        <div className="mb-3">
-          <label htmlFor="backdrop" className="form-label">
-            Backdrop:
-          </label>
-          <div className="input-group">
-            <input
-              type="text"
-              className="form-control"
-              name="backdrop"
-              value={movieData.backdrop}
-              onChange={handleInputChange}
-            />
-            <button
-              type="button"
-              className="btn btn-outline-secondary"
-              onClick={toggleBackdrop}
-            >
-              {showBackdrop ? "Ẩn ảnh" : "Hiển thị ảnh"}
-            </button>
-          </div>
-          {showBackdrop && <img src={backdropurl} style={{ width: "50%", height: "50%px" }} />}
-          </div>
+        </div>
         <div className="mb-3">
           <label htmlFor="title" className="form-label">
             Title:
@@ -345,12 +257,12 @@ function EditMovie() {
           <label htmlFor="genre" className="form-label">
             Genre:
           </label>
-          <Select
+          {/* <Select
             isMulti
             options={genres}
             value={genres.filter((g) => movieData.genre.includes(g.value))}
             onChange={handleInputChangeGenre}
-          />
+          /> */}
         </div>
         <div className="mb-3">
           <label htmlFor="description" className="form-label">
@@ -382,7 +294,7 @@ function EditMovie() {
               <p>Video đã chọn:</p>
               <iframe
                 width="100%"
-                height="400"
+                height="800"
                 src={`https://www.youtube.com/embed/${movieData.trailer}`}
                 title="YouTube video player"
                 frameBorder="4"
@@ -472,4 +384,4 @@ function EditMovie() {
   );
 }
 
-export default EditMovie;
+export default EditBill;

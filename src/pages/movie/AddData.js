@@ -85,7 +85,18 @@ function AddMovie() {
   };
   const [youtubeVideoId, setYoutubeVideoId] = useState('');
 
-  // ...
+  const imageurl = movieData.poster;
+  const backdropurl = movieData.backdrop;
+  const [showImage, setShowImage] = useState(false);
+
+  const toggleImage = () => {
+    setShowImage(!showImage);
+  };
+  const [showBackdrop, setShowBackdrop] = useState(false);
+
+  const toggleBackdrop = () => {
+    setShowBackdrop(!showBackdrop);
+  };
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -94,11 +105,28 @@ function AddMovie() {
       const videoId = extractYouTubeVideoId(value);
       setYoutubeVideoId(videoId);
     }
-        
+    else if (name === 'backdrop') {
+      // Nếu người dùng nhập vào ô backdrop, xử lý và lấy ảnh
+      setShowBackdrop(true); // Hiển thị ảnh ngay khi nhập
       setMovieData({
         ...movieData,
         [name]: value,
       });
+    }
+    else if (name === 'poster') {
+      // Nếu người dùng nhập vào ô backdrop, xử lý và lấy ảnh
+      setShowImage(true); // Hiển thị ảnh ngay khi nhập
+      setMovieData({
+        ...movieData,
+        [name]: value,
+      });
+    }
+     else{
+      setMovieData({
+      ...movieData,
+      [name]: value,
+    });}   
+      
     
   };
 
@@ -198,7 +226,7 @@ function AddMovie() {
     <div className="container mt-5">
       <h1>Thêm Dữ Liệu Phim</h1>
       <form onSubmit={handleSubmit}>
-        <div className="mb-3">
+        {/* <div className="mb-3">
           <label htmlFor="poster" className="form-label">
             Poster:
           </label>
@@ -210,8 +238,30 @@ function AddMovie() {
             value={movieData.poster}
             onChange={handleInputChange}
           />
-        </div>
+        </div> */}
         <div className="mb-3">
+          <label htmlFor="poster" className="form-label">
+            Poster:
+          </label>
+          <div className="input-group">
+            <input
+              type="text"
+              className="form-control"
+              name="poster"
+              value={movieData.poster}
+              onChange={handleInputChange}
+            />
+            <button
+              type="button"
+              className="btn btn-outline-secondary"
+              onClick={toggleImage}
+            >
+              {showImage ? "Ẩn ảnh" : "Hiển thị ảnh"}
+            </button>
+          </div>
+          {showImage && <img src={imageurl} style={{ width: "50%", height: "50%px" }} />}
+          </div>
+        {/* <div className="mb-3">
           <label htmlFor="backdrop" className="form-label">
             backdrop:
           </label>
@@ -222,7 +272,29 @@ function AddMovie() {
             value={movieData.backdrop}
             onChange={handleInputChange}
           />
-        </div>
+        </div> */}
+        <div className="mb-3">
+          <label htmlFor="backdrop" className="form-label">
+            Backdrop:
+          </label>
+          <div className="input-group">
+            <input
+              type="text"
+              className="form-control"
+              name="backdrop"
+              value={movieData.backdrop}
+              onChange={handleInputChange}
+            />
+            <button
+              type="button"
+              className="btn btn-outline-secondary"
+              onClick={toggleBackdrop}
+            >
+              {showBackdrop ? "Ẩn ảnh" : "Hiển thị ảnh"}
+            </button>
+          </div>
+          {showBackdrop && <img src={backdropurl} style={{ width: "50%", height: "50%px" }} />}
+          </div>
         <div className="mb-3">
           <label htmlFor="title" className="form-label">
             Title:

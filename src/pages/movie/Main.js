@@ -87,12 +87,12 @@ function Main() {
                 >
                   Delete
                 </button>
-                <button
+                {/* <button
                   className="btn btn-outline-success"
                   onClick={() => handleDetail(id)}
                 >
                   Detail
-                </button>
+                </button> */}
               </td>
             </tr>
           ))}

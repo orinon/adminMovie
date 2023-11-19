@@ -12,7 +12,8 @@ import "react-toastify/dist/ReactToastify.css";
 import Detail from "./pages/movie/Detail";
 import User from "./pages/user/User";
 import Bill from "./pages/bill/Bill"
-
+import DetailBill from "./pages/bill/DetailBill";
+import EditBill from "./pages/bill/EditBill";
 function App() {
   return (
     <Router>
@@ -25,7 +26,10 @@ function App() {
         <Route path="/edit/:id" element={<Edit firebaseApp={app} />} />
         <Route path="/detail/:id" element={<Detail firebaseApp={app}/>} />
         <Route path="/User" element={<User firebaseApp={app}/>} />
-        <Route path="/Bill/:title" element={<Bill firebaseApp={app}/>}/>
+        <Route path="/Bill" element={<Bill firebaseApp={app}/>}/>
+        <Route path="/DetailBill/:id" element={<DetailBill firebaseApp={app}/>}/>
+        <Route path="/EditBill/:id" element={<EditBill firebaseApp={app}/>}/>
+
       </Routes>
       </div>
     </Router>

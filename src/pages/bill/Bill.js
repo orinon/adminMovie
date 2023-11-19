@@ -1,98 +1,105 @@
 import React, { useEffect, useState } from "react";
-import { getDatabase, ref, onValue } from "firebase/database";
-import { app } from "../../firebase";
-import { useParams } from "react-router-dom";
+import { getDatabase, ref, onValue, remove } from "firebase/database";
+import { app } from "../../firebase"; // Đảm bảo rằng đường dẫn đúng đến tệp firebase.js của bạn
+import { useNavigate } from "react-router-dom"; // Sử dụng useNavigate thay cho useHistory
+import "./Bill.css"
 
 
-const Detail = () => {
-
-    const [data, setData] = useState([]);
-    const {title} = useParams();
-    
-    // useEffect(() => {
-    //     const db = getDatabase(app);
-    //     const dataRef = ref(db, "bills");
-    
-    //     onValue(dataRef, (snapshot) => {
-    //         if (snapshot.exists()) {
-    //           const rawData = snapshot.val();
-    //           // Lọc dữ liệu theo id từ useParams
-    //           const dataByTitle  = rawData[title];
-    //           console.log(title)
-    //           if (dataByTitle) {
-    //             const { date, email, displayName, movieDetail, numberOfSeats, selectedSeats,time,total } = dataByTitle;
-    //             console.log(date)
-    //             if(selectedSeats)
-    //             {
-    //               const selectedSeatsProps = Object.keys(selectedSeats);
-
-    //               // Tạo một đối tượng mới để chứa tất cả thuộc tính con của subData5
-    //               const selectedSeatsObj = {};
-    //               selectedSeatsProps.forEach((prop) => {
-    //                 selectedSeatsObj[prop] = selectedSeats[prop];
-    //               });
-                  
-    //               setData({
-    //                 date, email, displayName, movieDetail, numberOfSeats, selectedSeats:selectedSeatsObj,time,total
-    //               });
-
-    //               console.log(title)
-    //             }
-    //           } else {
-    //             console.log("No data available for this id");
-    //           }
-    //         } else {
-    //           console.log("No data available");
-    //         }
-    //       });
-    //     return()=>{
-    //         setData([]);
-    //     }
-    //   }, [title]);
+function Main() {
+  const [data, setData] = useState([]);
+  const navigate = useNavigate(); // Sử dụng useNavigate
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const db = getDatabase(app);
-        const dataRef = ref(db, "bills");
+    const db = getDatabase(app);
+    const dataRef = ref(db, "bills");
 
-        onValue(dataRef, (snapshot) => {
-          if (snapshot.exists()) {
-            const rawData = snapshot.val();
-            // Lọc dữ liệu theo id từ useParams
-            const dataByTitle = rawData[title];
-            console.log(title)
+    onValue(dataRef,(snapshot) => {
+        
+        
+      if (snapshot.exists()) {
+        setData(snapshot.val());
+      } else {
+        console.log("No data available");
+      }
+    });
+    return()=>{
+        setData({});
+    }
+  }, []);
 
-            if (snapshot.exists()) {
-              const rawData = snapshot.val();
-              const dataByTitle = rawData[title];
+  const handleEdit = (id) => {
+    // Điều hướng đến trang chỉnh sửa với id được chọn
+    navigate(`/EditBill/${id}`); // Sử dụng navigate thay cho history.push
+  };
 
-              if (dataByTitle) {
-                setData(dataByTitle);
-                console.log("Data fetched successfully:", dataByTitle);
-              } else {
-                console.log("No data available for this title");
-              }
-            } else {
-              console.log("No data available");
-            }
-          } 
+  const handleDelete = (id) => {
+    // Hiển thị hộp thoại xác nhận
+    const isConfirmed = window.confirm("Bạn có chắc chắn muốn xóa mục này?");
+  
+    if (isConfirmed) {
+      // Thực hiện xóa dữ liệu từ Firebase Realtime Database
+      const db = getDatabase(app);
+      const dataRef = ref(db, `bills/${id}`);
+      remove(dataRef, id)
+        .then(() => {
+          console.log("Dữ liệu đã bị xóa thành công");
         })
-      }catch (error) {
-            console.error("Error fetching data: ", error.message);
-          }
+        .catch((error) => {
+          console.error("Xóa dữ liệu không thành công: " + error.message);
+        });
+    }
+  };
+  
 
+  const handleDetail = (id) => {
+    // Điều hướng đến trang chi tiết với id được chọn
+    navigate(`/DetailBill/${id}`); // Sử dụng navigate thay cho history.push
+  };
 
-          fetchData();
-        }}, [title] );
-      
-     console.log(JSON.stringify(data, null, 2))
-      return (
-        <div>
-      <h1>Title: {title}</h1>
-      <pre>{JSON.stringify(data, null, 2)}</pre>
+  return (
+    <div className="data-list-container">
+      <h1>Danh Sách Dữ Liệu</h1>
+      <table className="table table-bordered table-hover">
+        <thead className="table-primary">
+          <tr>
+            <th>Number</th>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {Object.keys(data).map((id, index) => (
+            <tr key={id}>
+              <td>{index + 1}</td>
+              <td>{id}</td>
+              <td>{data[id].billID}</td>
+              <td>
+                <button
+                  className="btn btn-outline-primary me-2"
+                  onClick={() => handleEdit(id)}
+                >
+                  Edit
+                </button>
+                <button
+                  className="btn btn-outline-danger me-2"
+                  onClick={() => handleDelete(id)}
+                >
+                  Delete
+                </button>
+                <button
+                  className="btn btn-outline-success"
+                  onClick={() => handleDetail(id)}
+                >
+                  Detail
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
-      );
+  );
 }
 
-export default Detail
+export default Main;

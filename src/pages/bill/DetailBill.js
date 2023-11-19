@@ -2,16 +2,16 @@ import React, { useEffect, useState } from "react";
 import { getDatabase, ref, onValue } from "firebase/database";
 import { app } from "../../firebase";
 import { useParams } from "react-router-dom";
-import "./Detail.css";
+import "./DetailBill.css";
 
-const Detail = () => {
+const DetailBill = () => {
 
     const [data, setData] = useState([]);
     const {id} = useParams();
     
     useEffect(() => {
         const db = getDatabase(app);
-        const dataRef = ref(db, "movieData");
+        const dataRef = ref(db, "bills");
     
         onValue(dataRef, (snapshot) => {
             if (snapshot.exists()) {
@@ -22,6 +22,7 @@ const Detail = () => {
                 setData(dataById);
               } else {
                 console.log("No data available for this id");
+                
               }
             } else {
               console.log("No data available");
@@ -32,7 +33,6 @@ const Detail = () => {
         }
       }, [id]);
       const imageurl = data.poster;
-      const backdropurl = data.backdrop;
       return (
         <div className="detail-container">
           <h1>Chi Tiết Dữ Liệu</h1>
@@ -40,14 +40,12 @@ const Detail = () => {
             <tbody>
               <tr>
                 <td>
-                  <h3>ID: {data.id}</h3>
-                  <h3>Title: {data.title}</h3>
-                  <h3>Actor: {data.actor}</h3>
-                  <h3>Age: {data.ageRequired}</h3> 
-                  <h3>Age: {data.ageRequired}</h3> 
-                  <img src={backdropurl} alt={`Backdrop for ${data.title}` } />
+                  <h3>ID: {id}</h3>
+                  <h3>BillID: {data.billID}</h3>
+                  <h3>Date: {data.date}</h3>
+                  <h3>Day: {data.day}</h3>
                   {/* Các trường dữ liệu khác tương tự ở đây */}
-                  <img src={imageurl} alt={`Poster for ${data.title}` } />
+                  <img src={imageurl} alt={`Poster for ${data.title}`} />
                 </td>
               </tr>
             </tbody>
@@ -56,4 +54,4 @@ const Detail = () => {
       );
 }
 
-export default Detail
+export default DetailBill
