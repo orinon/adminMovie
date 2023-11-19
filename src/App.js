@@ -3,13 +3,15 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { app } from "./firebase"; // Import cấu hình Firebase từ tệp firebase.js
-import Main from "./pages/Main";
-import AddData from "./pages/AddData";
-import Edit from "./pages/Edit";
-import Header from "./pages/Header"; // Import thành phần Header
+import Main from "./pages/movie/Main";
+import AddData from "./pages/movie/AddData";
+import Edit from "./pages/movie/Edit";
+import Header from "./pages/movie/Header"; // Import thành phần Header
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Detail from "./pages/Detail";
+import Detail from "./pages/movie/Detail";
+import User from "./pages/user/User";
+import Bill from "./pages/bill/Bill"
 
 function App() {
   return (
@@ -22,6 +24,8 @@ function App() {
         <Route path="/add" element={<AddData firebaseApp={app} />} />
         <Route path="/edit/:id" element={<Edit firebaseApp={app} />} />
         <Route path="/detail/:id" element={<Detail firebaseApp={app}/>} />
+        <Route path="/User" element={<User firebaseApp={app}/>} />
+        <Route path="/Bill/:title" element={<Bill firebaseApp={app}/>}/>
       </Routes>
       </div>
     </Router>

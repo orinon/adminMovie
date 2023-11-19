@@ -5,14 +5,14 @@ import { ref, get, set, push } from "firebase/database"; // Thêm các hàm liê
 import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCtyTC90zQ4L9CfQExALFTfKJjzzbiGgiw",
-  authDomain: "movie-a5b07.firebaseapp.com",
-  databaseURL: "https://movie-a5b07-default-rtdb.firebaseio.com",
-  projectId: "movie-a5b07",
-  storageBucket: "movie-a5b07.appspot.com",
-  messagingSenderId: "646521216474",
-  appId: "1:646521216474:web:27c209818092e46839f4e3",
-  measurementId: "G-BMEKB7G11D"
+  apiKey: "AIzaSyAWuj1Otg1vufdQCFiPp3f-NBBYzYbffZ0",
+  authDomain: "moviebooking-dd8f1.firebaseapp.com",
+  databaseURL: "https://moviebooking-dd8f1-default-rtdb.firebaseio.com",
+  projectId: "moviebooking-dd8f1",
+  storageBucket: "moviebooking-dd8f1.appspot.com",
+  messagingSenderId: "373152859926",
+  appId: "1:373152859926:web:97bb5d7c9648e9974bb237",
+  measurementId: "G-KR0S9071CZ"
 };
 
 const app = initializeApp(firebaseConfig);

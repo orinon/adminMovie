@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { getDatabase, ref, get, child, onValue, update, remove } from "firebase/database";
+import { getDatabase, ref, onValue, remove } from "firebase/database";
 import { app } from "../../firebase"; // Đảm bảo rằng đường dẫn đúng đến tệp firebase.js của bạn
 import { useNavigate } from "react-router-dom"; // Sử dụng useNavigate thay cho useHistory
 import "./Main.css"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { id } from "date-fns/locale";
+
 
 function Main() {
   const [data, setData] = useState([]);
@@ -15,7 +14,7 @@ function Main() {
     const dataRef = ref(db, "movieData");
 
     onValue(dataRef,(snapshot) => {
-        const data = snapshot.val();
+        
         
       if (snapshot.exists()) {
         setData(snapshot.val());
@@ -80,19 +79,19 @@ function Main() {
                   className="btn btn-outline-primary me-2"
                   onClick={() => handleEdit(id)}
                 >
-                  <FontAwesomeIcon icon="edit" /> Edit
+                  Edit
                 </button>
                 <button
                   className="btn btn-outline-danger me-2"
                   onClick={() => handleDelete(id)}
                 >
-                  <FontAwesomeIcon icon="trash" /> Delete
+                  Delete
                 </button>
                 <button
                   className="btn btn-outline-success"
                   onClick={() => handleDetail(id)}
                 >
-                  <FontAwesomeIcon icon="info-circle" /> Detail
+                  Detail
                 </button>
               </td>
             </tr>

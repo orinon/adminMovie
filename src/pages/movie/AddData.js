@@ -3,8 +3,9 @@ import { database } from "../../firebase"; // Import cấu hình Firebase và da
 import { ref, push, onValue } from "firebase/database";
 import { toast } from "react-toastify";
 import DatePicker from "react-datepicker"; // Import date picker library
+import Select from "react-select";
 import "react-datepicker/dist/react-datepicker.css";
-
+// import "react-select/dist/react-select.css"; 
 import "./AddData.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -15,7 +16,7 @@ function AddMovie() {
     poster: "",
     title: "",
     language: "",
-    genre: "",
+    genre: [],
     rating: 0, // Giới hạn rating từ 0
     description: "",
     releaseDate: new Date(), // Giá trị mặc định là ngày hiện tại
@@ -27,33 +28,54 @@ function AddMovie() {
     director: "",
     actor: "",
   });
+  const genres = [
+    { value: "Phiêu lưu", label: "Phiêu lưu" },
+    { value: "Tưởng tượng", label: "Tưởng tượng" },
+    { value: "Hoạt hình", label: "Hoạt hình" },
+    { value: "Drama", label: "Drama" },
+    { value: "Kinh dị", label: "Kinh dị" },
+    { value: "Hành động", label: "Hành động"},
+    { value: "Hài kịch", label: "Hài kịch" },
+    { value: "Lịch sử", label: "Lịch sử" },
+    { value: "Miền tây", label: "Miền tây" },
+    { value: "Giật gân", label: "Giật gân"},
+    { value:  "Tội phạm", label:  "Tội phạm" },
+    { value: "Tài liệu", label: "Tài liệu"},
+    { value:  "Khoa học viễn tưởng", label: "Khoa học viễn tưởng"},
+    { value: "Bí ẩn", label:  "Bí ẩn"},
+    { value:  "Gia đình", label: "Gia đình"},
+    { value:  "Nhạc", label:  "Nhạc"},
+    { value:   "Lãng mạn", label: "Lãng mạn"},
+    { value:  "Chiến tranh", label: "Chiến tranh"},
+    { value:  "Truyền hình", label:  "Truyền hình"},
+  ];
+
+  const [selectedGenres, setSelectedGenres] = useState([]);
+
+  const extractYouTubeVideoId = (url) => {
+    const videoIdRegex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/|^https?:\/\/youtu.be\/)([^"&?\/\s]{11})/;
+    const match = url.match(videoIdRegex);
+    return match ? match[1] : '';
+  };
 
   const [maxId, setMaxId] = useState();
   const dbRef = ref(database, "movieData");
   useEffect(() => {
     onValue(dbRef, (snapshot) => {
       const data = snapshot.val();
-  
+
       const movies = Object.values(data);
       console.log(movies)
-      let num = 0 
+      let num = 0
       movies.forEach(element => {
-        num ++;
+        num++;
         setMaxId(num)
       });
-  
-  
+
+
     });
   }, [maxId])
-  
 
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setMovieData({
-      ...movieData,
-      [name]: value,
-    });
-  };
 
   const handleDateChange = (date) => {
     setMovieData({
@@ -61,84 +83,118 @@ function AddMovie() {
       releaseDate: date,
     });
   };
+  const [youtubeVideoId, setYoutubeVideoId] = useState('');
+
+  // ...
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    if (name === 'trailer') {
+      // Nếu người dùng nhập vào ô trailer, xử lý URL và lấy ID của video
+      const videoId = extractYouTubeVideoId(value);
+      setYoutubeVideoId(videoId);
+    }
+        
+      setMovieData({
+        ...movieData,
+        [name]: value,
+      });
+    
+  };
+
+  const handleInputChangeGenre = (selectedGenres) => {
+    setMovieData({
+      ...movieData,
+      genre: selectedGenres.map((genre) => genre.value),
+    });
+  };
+
+  // ...
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     // Tạo mảng để lưu trạng thái của từng điều kiện
-  let errorMessages = [];
+    let errorMessages = [];
 
-  if (!movieData.title) {
-    errorMessages.push("Vui lòng nhập tiêu đề.");
-  }
+    if (!movieData.title) {
+      errorMessages.push("Vui lòng nhập tiêu đề.");
+    }
 
-  if (!movieData.poster) {
-    errorMessages.push("Vui lòng nhập đường dẫn poster.");
-  }
+    if (!movieData.poster) {
+      errorMessages.push("Vui lòng nhập đường dẫn poster.");
+    }
 
-  if (!movieData.description) {
-    errorMessages.push("Vui lòng nhập mô tả.");
-  }
+    if (!movieData.description) {
+      errorMessages.push("Vui lòng nhập mô tả.");
+    }
 
-  if (movieData.rating < 0 || movieData.rating > 10) {
-    errorMessages.push("Rating phải nằm trong khoảng từ 0 đến 10.");
-  }
+    if (movieData.rating < 0 || movieData.rating > 10) {
+      errorMessages.push("Rating phải nằm trong khoảng từ 0 đến 10.");
+    }
 
-  if(!movieData.backdrop) {
-    errorMessages.push("Vui lòng nhập đường dẫn backdrop.");
-  }
-  // if(){
+    if (!movieData.backdrop) {
+      errorMessages.push("Vui lòng nhập đường dẫn backdrop.");
+    }
 
-  // }
+    if (!movieData.trailer) {
+      errorMessages.push("Vui lòng nhập đường dẫn trailer.");
+    }
+    // if(){
 
-  // Kiểm tra nếu có lỗi
-  if (errorMessages.length > 0) {
-    // Hiển thị thông báo với danh sách lỗi
-    toast.error(errorMessages.join("\n"));
-  }else {
+    // }
+    // Kiểm tra nếu có lỗi
+    if (errorMessages.length > 0) {
+      // Hiển thị thông báo với danh sách lỗi
+      toast.error(errorMessages.join("\n"));
+    } else {
       try {
         const dbRef = ref(database, "movieData");
-        const newId = maxId+1;
-        toast.success("Thêm thành công");
+        const newId = maxId + 1;
 
         const userConfirmed = window.confirm("Bạn có chắc chắn muốn thêm dữ liệu không?");
 
         if (userConfirmed) {
-  // Hiển thị thông báo push thành công
-        toast.success("Thêm thành công");
-        // Thêm dữ liệu mới vào Firebase
-        push(dbRef, { ...movieData, id: newId })
-          
-  
-            // Đặt lại giá trị của biểu mẫu sau khi thêm dữ liệu thành công
-            setMovieData({
-              id: null,
-              poster: "",
-              title: "",
-              language: "",
-              genre: "",
-              rating: 0,
-              description: "",
-              releaseDate: new Date(),
-              trailer: "",
-              status: "",
-              ageRequired: "",
-              time: "",
-              censorship: "",
-              director: "",
-              actor: "",
-            });
-  
-            
-      } else {
-        toast.error("Thêm bị hủy bởi người dùng");
-      }}catch (error) {
+
+
+          const updatedMovieData = { ...movieData, trailer: youtubeVideoId };
+
+          toast.success("Thêm thành công");
+          // Thêm dữ liệu mới vào Firebase
+          push(dbRef, { ...updatedMovieData, id: newId })
+
+
+          // Đặt lại giá trị của biểu mẫu sau khi thêm dữ liệu thành công
+          setMovieData({
+            id: null,
+            poster: "",
+            title: "",
+            language: "",
+            backdrop: "",
+            genre: [],
+            rating: 0,
+            description: "",
+            releaseDate: new Date(),
+            trailer: "",
+            status: "",
+            ageRequired: "",
+            time: "",
+            censorship: "",
+            director: "",
+            actor: "",
+          });
+
+
+        } else {
+          toast.error("Thêm bị hủy bởi người dùng");
+        }
+      } catch (error) {
         toast.error("Lỗi khi thêm dữ liệu: " + error.message);
       }
     }
   };
-  
 
- return (
+
+  return (
     <div className="container mt-5">
       <h1>Thêm Dữ Liệu Phim</h1>
       <form onSubmit={handleSubmit}>
@@ -157,7 +213,7 @@ function AddMovie() {
         </div>
         <div className="mb-3">
           <label htmlFor="backdrop" className="form-label">
-          backdrop:
+            backdrop:
           </label>
           <input
             type="text"
@@ -218,7 +274,7 @@ function AddMovie() {
             onChange={handleInputChange}
           />
         </div>
-        <div className="mb-3">
+        {/* <div className="mb-3">
           <label htmlFor="genre" className="form-label">
             Genre:
           </label>
@@ -229,6 +285,17 @@ function AddMovie() {
             name="genre"
             value={movieData.genre}
             onChange={handleInputChange}
+          />
+        </div> */}
+        <div className="mb-3">
+          <label htmlFor="genre" className="form-label">
+            Genre:
+          </label>
+          <Select
+            isMulti
+            options={genres}
+            value={genres.filter((g) => movieData.genre.includes(g.value))}
+            onChange={handleInputChangeGenre}
           />
         </div>
         <div className="mb-3">
@@ -243,7 +310,7 @@ function AddMovie() {
             onChange={handleInputChange}
           />
         </div>
-        <div className="mb-3">
+        {/* <div className="mb-3">
           <label htmlFor="trailer" className="form-label">
             Trailer:
           </label>
@@ -255,7 +322,36 @@ function AddMovie() {
             value={movieData.trailer}
             onChange={handleInputChange}
           />
+        </div> */}
+        <div className="mb-3">
+          <label htmlFor="trailer" className="form-label">
+            Trailer:
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            id="trailer"
+            name="trailer"
+            value={movieData.trailer}
+            onChange={handleInputChange}
+            placeholder="Dán URL YouTube vào đây..."
+          />
+          {youtubeVideoId && (
+            <div className="mt-2">
+              <p>Video đã chọn:</p>
+              <iframe
+                width="100%"
+                height="800"
+                src={`https://www.youtube.com/embed/${youtubeVideoId}`}
+                title="YouTube video player"
+                frameBorder="4"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+            </div>
+          )}
         </div>
+
         <div className="mb-3">
           <label htmlFor="status" className="form-label">
             Status:

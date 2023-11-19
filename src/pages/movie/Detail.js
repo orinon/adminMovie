@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { getDatabase, ref, get, child, onValue, update } from "firebase/database";
-import { app ,database} from "../../firebase";
+import { getDatabase, ref, onValue } from "firebase/database";
+import { app } from "../../firebase";
 import { useParams } from "react-router-dom";
 import "./Detail.css";
 
