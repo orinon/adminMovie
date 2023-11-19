@@ -1,0 +1,14 @@
+/* YourComponent.css */
+
+.data-list-container {
+  margin: 20px;
+}
+
+.table-primary {
+  background-color: #007bff;
+  color: #ffffff;
+}
+
+.btn {
+  margin-right: 5px;
+}

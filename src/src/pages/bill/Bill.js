@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getDatabase, ref, onValue, remove } from "firebase/database";
 import { app } from "../../firebase"; // Đảm bảo rằng đường dẫn đúng đến tệp firebase.js của bạn
 import { useNavigate } from "react-router-dom"; // Sử dụng useNavigate thay cho useHistory
-import "./Main.css"
+import "./Bill.css"
 
 
 function Main() {
@@ -11,7 +11,7 @@ function Main() {
 
   useEffect(() => {
     const db = getDatabase(app);
-    const dataRef = ref(db, "movieData");
+    const dataRef = ref(db, "bills");
 
     onValue(dataRef,(snapshot) => {
         
@@ -29,7 +29,7 @@ function Main() {
 
   const handleEdit = (id) => {
     // Điều hướng đến trang chỉnh sửa với id được chọn
-    navigate(`/edit/${id}`); // Sử dụng navigate thay cho history.push
+    navigate(`/EditBill/${id}`); // Sử dụng navigate thay cho history.push
   };
 
   const handleDelete = (id) => {
@@ -39,7 +39,7 @@ function Main() {
     if (isConfirmed) {
       // Thực hiện xóa dữ liệu từ Firebase Realtime Database
       const db = getDatabase(app);
-      const dataRef = ref(db, `movieData/${id}`);
+      const dataRef = ref(db, `bills/${id}`);
       remove(dataRef, id)
         .then(() => {
           console.log("Dữ liệu đã bị xóa thành công");
@@ -53,7 +53,7 @@ function Main() {
 
   const handleDetail = (id) => {
     // Điều hướng đến trang chi tiết với id được chọn
-    navigate(`/detail/${id}`); // Sử dụng navigate thay cho history.push
+    navigate(`/DetailBill/${id}`); // Sử dụng navigate thay cho history.push
   };
 
   return (
@@ -73,7 +73,7 @@ function Main() {
             <tr key={id}>
               <td>{index + 1}</td>
               <td>{id}</td>
-              <td>{data[id].title}</td>
+              <td>{data[id].billID}</td>
               <td>
                 <button
                   className="btn btn-outline-primary me-2"
@@ -87,12 +87,12 @@ function Main() {
                 >
                   Delete
                 </button>
-                {/* <button
+                <button
                   className="btn btn-outline-success"
                   onClick={() => handleDetail(id)}
                 >
                   Detail
-                </button> */}
+                </button>
               </td>
             </tr>
           ))}

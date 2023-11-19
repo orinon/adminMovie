@@ -33,10 +33,15 @@ function Header() {
               </NavLink>
             </li>
             <li>
+            <NavLink className="nav-link" to="/Bill" activeClassName="active">
+                Bill
+              </NavLink>
+            </li>
+            {/* <li>
             <NavLink className="nav-link" to="/User" activeClassName="active">
                 User
               </NavLink>
-            </li>
+            </li> */}
             {/* Thêm các NavLink khác ở đây */}
           </ul>
         </div>

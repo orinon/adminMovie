@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from "react";
-import { database } from "../../firebase"; // Import cấu hình Firebase và database
-import { ref, push, onValue } from "firebase/database";
+import React, { useState, useEffect } from "react";
+import { database ,app} from "../../firebase";
+import { ref, update ,onValue,getDatabase} from "firebase/database";
 import { toast } from "react-toastify";
-import DatePicker from "react-datepicker"; // Import date picker library
+import DatePicker from "react-datepicker";
 import Select from "react-select";
 import "react-datepicker/dist/react-datepicker.css";
-// import "react-select/dist/react-select.css"; 
-import "./AddData.css";
-import "bootstrap/dist/css/bootstrap.min.css";
+import "./EditBill.css";
+import { useParams,useNavigate } from "react-router-dom";
 
 
-function AddMovie() {
+function EditBill() {
+  
   const [movieData, setMovieData] = useState({
     id: null, // Thêm id vào dữ liệu, ban đầu để giá trị null
     poster: "",
@@ -28,92 +28,89 @@ function AddMovie() {
     director: "",
     actor: "",
   });
-  const genres = [
-    { value: "Phiêu lưu", label: "Phiêu lưu" },
-    { value: "Tưởng tượng", label: "Tưởng tượng" },
-    { value: "Hoạt hình", label: "Hoạt hình" },
-    { value: "Drama", label: "Drama" },
-    { value: "Kinh dị", label: "Kinh dị" },
-    { value: "Hành động", label: "Hành động"},
-    { value: "Hài kịch", label: "Hài kịch" },
-    { value: "Lịch sử", label: "Lịch sử" },
-    { value: "Miền tây", label: "Miền tây" },
-    { value: "Giật gân", label: "Giật gân"},
-    { value:  "Tội phạm", label:  "Tội phạm" },
-    { value: "Tài liệu", label: "Tài liệu"},
-    { value:  "Khoa học viễn tưởng", label: "Khoa học viễn tưởng"},
-    { value: "Bí ẩn", label:  "Bí ẩn"},
-    { value:  "Gia đình", label: "Gia đình"},
-    { value:  "Nhạc", label:  "Nhạc"},
-    { value:   "Lãng mạn", label: "Lãng mạn"},
-    { value:  "Chiến tranh", label: "Chiến tranh"},
-    { value:  "Truyền hình", label:  "Truyền hình"},
-  ];
-
-  const [selectedGenres, setSelectedGenres] = useState([]);
-
-  const extractYouTubeVideoId = (url) => {
-    const videoIdRegex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/|^https?:\/\/youtu.be\/)([^"&?\/\s]{11})/;
-    const match = url.match(videoIdRegex);
-    return match ? match[1] : '';
-  };
-
-  const [maxId, setMaxId] = useState();
-  const dbRef = ref(database, "movieData");
+ 
+  const {id} =useParams();
+  
+  const navigate = useNavigate();
   useEffect(() => {
-    onValue(dbRef, (snapshot) => {
-      const data = snapshot.val();
-
-      const movies = Object.values(data);
-      console.log(movies)
-      let num = 0
-      movies.forEach(element => {
-        num++;
-        setMaxId(num)
+    const db = getDatabase(app);
+    const dataRef = ref(db, "bills");
+    
+    console.log(id)
+    onValue(dataRef, (snapshot) => {
+        if (snapshot.exists()) {
+          const rawData = snapshot.val();
+          // Lọc dữ liệu theo id từ useParams
+          const dataById = rawData[id];
+          console.log(id)
+          if (dataById) {
+            // const genreData = dataById.genre || []; // Thiết lập giá trị mặc định nếu là null hoặc không tồn tại
+            // setMovieData({ ...dataById, genre: genreData });
+            
+          } else {
+            console.log("No data available for this id");
+          }
+        } else {
+          console.log("No data available");
+        }
       });
+    return()=>{
+      setMovieData({
+        id: null,
+        poster: "",
+        title: "",
+        language: "",
+        genre: [],
+        rating: 0,
+        description: "",
+        releaseDate: new Date(),
+        trailer: "",
+        status: "",
+        ageRequired: "",
+        time: "",
+        censorship: "",
+        director: "",
+        actor: "",
+      });
+    }
+  }, [id]);
+  
 
 
-    });
-  }, [maxId])
-
-
+  
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+  
+    if (name === 'trailer') {
+      // Nếu người dùng nhập vào ô trailer, xử lý URL và lấy ID của video
+      // const videoId = extractVideoIdFromUrl(value);
+      
+      // Cập nhật state chỉ khi người dùng nhập vào ô trailer
+      setMovieData({
+        ...movieData,
+        // [name]: videoId,
+      });
+    } else {
+      // Cập nhật state cho các trường khác
+      setMovieData({
+        ...movieData,
+        [name]: value,
+      });
+    }
+  };
+  
   const handleDateChange = (date) => {
     setMovieData({
       ...movieData,
       releaseDate: date,
     });
   };
-  const [youtubeVideoId, setYoutubeVideoId] = useState('');
-
-  // ...
-
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    if (name === 'trailer') {
-      // Nếu người dùng nhập vào ô trailer, xử lý URL và lấy ID của video
-      const videoId = extractYouTubeVideoId(value);
-      setYoutubeVideoId(videoId);
-    }
-        
-      setMovieData({
-        ...movieData,
-        [name]: value,
-      });
-    
-  };
-
-  const handleInputChangeGenre = (selectedGenres) => {
-    setMovieData({
-      ...movieData,
-      genre: selectedGenres.map((genre) => genre.value),
-    });
-  };
-
-  // ...
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // Tạo mảng để lưu trạng thái của từng điều kiện
+   
+      const dbRef = ref(database, `movieData/${id}`);
+       // Tạo mảng để lưu trạng thái của từng điều kiện
     let errorMessages = [];
 
     if (!movieData.title) {
@@ -139,65 +136,41 @@ function AddMovie() {
     if (!movieData.trailer) {
       errorMessages.push("Vui lòng nhập đường dẫn trailer.");
     }
-    // if(){
 
-    // }
-    // Kiểm tra nếu có lỗi
     if (errorMessages.length > 0) {
       // Hiển thị thông báo với danh sách lỗi
       toast.error(errorMessages.join("\n"));
     } else {
       try {
-        const dbRef = ref(database, "movieData");
-        const newId = maxId + 1;
-
-        const userConfirmed = window.confirm("Bạn có chắc chắn muốn thêm dữ liệu không?");
+        const userConfirmed = window.confirm("Bạn có chắc chắn muốn cập nhật dữ liệu không?");
 
         if (userConfirmed) {
-
-
-          const updatedMovieData = { ...movieData, trailer: youtubeVideoId };
-
-          toast.success("Thêm thành công");
-          // Thêm dữ liệu mới vào Firebase
-          push(dbRef, { ...updatedMovieData, id: newId })
-
-
-          // Đặt lại giá trị của biểu mẫu sau khi thêm dữ liệu thành công
-          setMovieData({
-            id: null,
-            poster: "",
-            title: "",
-            language: "",
-            backdrop: "",
-            genre: [],
-            rating: 0,
-            description: "",
-            releaseDate: new Date(),
-            trailer: "",
-            status: "",
-            ageRequired: "",
-            time: "",
-            censorship: "",
-            director: "",
-            actor: "",
-          });
-
-
-        } else {
-          toast.error("Thêm bị hủy bởi người dùng");
+          await update(dbRef, movieData);
+        toast.success("Cập nhật dữ liệu thành công!");
+        navigate(`/`);
         }
+        else {
+          toast.error("Cập nhật bị hủy bởi người dùng");
+        }
+        
       } catch (error) {
-        toast.error("Lỗi khi thêm dữ liệu: " + error.message);
+        toast.error("Lỗi khi cập nhật dữ liệu: " + error.message);
       }
     }
+      
+    
   };
-
 
   return (
     <div className="container mt-5">
-      <h1>Thêm Dữ Liệu Phim</h1>
+      <h1>Chỉnh sửa dữ liệu</h1>
       <form onSubmit={handleSubmit}>
+        <div className="mb-3">
+          <label htmlFor="id" className="form-label">
+            ID:
+          </label>
+          <p className="form-control-static">{movieData.id}</p>
+        </div>
         <div className="mb-3">
           <label htmlFor="poster" className="form-label">
             Poster:
@@ -205,7 +178,6 @@ function AddMovie() {
           <input
             type="text"
             className="form-control"
-            id="poster"
             name="poster"
             value={movieData.poster}
             onChange={handleInputChange}
@@ -213,7 +185,7 @@ function AddMovie() {
         </div>
         <div className="mb-3">
           <label htmlFor="backdrop" className="form-label">
-            backdrop:
+          backdrop:
           </label>
           <input
             type="text"
@@ -230,7 +202,6 @@ function AddMovie() {
           <input
             type="text"
             className="form-control"
-            id="title"
             name="title"
             value={movieData.title}
             onChange={handleInputChange}
@@ -241,7 +212,7 @@ function AddMovie() {
             Release Date:
           </label>
           <DatePicker
-            selected={movieData.releaseDate}
+            value={movieData.releaseDate}
             onChange={handleDateChange}
             className="form-control"
           />
@@ -251,14 +222,11 @@ function AddMovie() {
             Rating:
           </label>
           <input
-            // type="number"
+            type="number"
             className="form-control"
-            id="rating"
             name="rating"
             value={movieData.rating}
             onChange={handleInputChange}
-            min="0"
-            max="10"
           />
         </div>
         <div className="mb-3">
@@ -268,7 +236,6 @@ function AddMovie() {
           <input
             type="text"
             className="form-control"
-            id="language"
             name="language"
             value={movieData.language}
             onChange={handleInputChange}
@@ -281,7 +248,6 @@ function AddMovie() {
           <input
             type="text"
             className="form-control"
-            id="genre"
             name="genre"
             value={movieData.genre}
             onChange={handleInputChange}
@@ -291,12 +257,12 @@ function AddMovie() {
           <label htmlFor="genre" className="form-label">
             Genre:
           </label>
-          <Select
+          {/* <Select
             isMulti
             options={genres}
             value={genres.filter((g) => movieData.genre.includes(g.value))}
             onChange={handleInputChangeGenre}
-          />
+          /> */}
         </div>
         <div className="mb-3">
           <label htmlFor="description" className="form-label">
@@ -304,25 +270,11 @@ function AddMovie() {
           </label>
           <textarea
             className="form-control"
-            id="description"
             name="description"
             value={movieData.description}
             onChange={handleInputChange}
           />
         </div>
-        {/* <div className="mb-3">
-          <label htmlFor="trailer" className="form-label">
-            Trailer:
-          </label>
-          <input
-            type="text"
-            className="form-control"
-            id="trailer"
-            name="trailer"
-            value={movieData.trailer}
-            onChange={handleInputChange}
-          />
-        </div> */}
         <div className="mb-3">
           <label htmlFor="trailer" className="form-label">
             Trailer:
@@ -336,13 +288,14 @@ function AddMovie() {
             onChange={handleInputChange}
             placeholder="Dán URL YouTube vào đây..."
           />
-          {youtubeVideoId && (
+          {movieData.trailer && (
+           
             <div className="mt-2">
               <p>Video đã chọn:</p>
               <iframe
                 width="100%"
                 height="800"
-                src={`https://www.youtube.com/embed/${youtubeVideoId}`}
+                src={`https://www.youtube.com/embed/${movieData.trailer}`}
                 title="YouTube video player"
                 frameBorder="4"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -351,7 +304,6 @@ function AddMovie() {
             </div>
           )}
         </div>
-
         <div className="mb-3">
           <label htmlFor="status" className="form-label">
             Status:
@@ -359,7 +311,6 @@ function AddMovie() {
           <input
             type="text"
             className="form-control"
-            id="status"
             name="status"
             value={movieData.status}
             onChange={handleInputChange}
@@ -372,7 +323,6 @@ function AddMovie() {
           <input
             type="text"
             className="form-control"
-            id="ageRequired"
             name="ageRequired"
             value={movieData.ageRequired}
             onChange={handleInputChange}
@@ -385,7 +335,6 @@ function AddMovie() {
           <input
             type="text"
             className="form-control"
-            id="time"
             name="time"
             value={movieData.time}
             onChange={handleInputChange}
@@ -398,7 +347,6 @@ function AddMovie() {
           <input
             type="text"
             className="form-control"
-            id="censorship"
             name="censorship"
             value={movieData.censorship}
             onChange={handleInputChange}
@@ -411,7 +359,6 @@ function AddMovie() {
           <input
             type="text"
             className="form-control"
-            id="director"
             name="director"
             value={movieData.director}
             onChange={handleInputChange}
@@ -424,17 +371,17 @@ function AddMovie() {
           <input
             type="text"
             className="form-control"
-            id="actor"
             name="actor"
             value={movieData.actor}
             onChange={handleInputChange}
           />
         </div>
         <button type="submit" className="btn btn-primary">
-          Thêm
+          Lưu
         </button>
       </form>
     </div>
   );
 }
-export default AddMovie;
+
+export default EditBill;
