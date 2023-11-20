@@ -80,7 +80,7 @@ function Main() {
                   className="btn btn-outline-primary me-2"
                   onClick={() => handleDetail(id)}
                 >
-                  Edit
+                  Detail
                 </button>
                 <button
                   className="btn btn-outline-danger me-2"

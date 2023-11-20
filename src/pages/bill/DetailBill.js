@@ -57,6 +57,10 @@ const DetailBill = () => {
                         <p>{data.movieDetail}</p>
                       </div>
                       <div className="detail-item">
+                        <h3>Được tạo vào:</h3>
+                        <p>{data.createAt}</p>
+                      </div>
+                      <div className="detail-item">
                         <h3>Email:</h3>
                         <p>{data.email}</p>
                       </div>
@@ -70,7 +74,7 @@ const DetailBill = () => {
                       </div>
                       <div className="detail-item">
                         <h3>Chi tiết ghế chọn:</h3>
-                        <p>{data.selectedSeats.join(", ")}</p>
+                        <p>{data.selectedSeats ? data.selectedSeats.join(", ") : "N/A"}</p>
                       </div>
                       <div className="detail-item">
                         <h3>Khung giờ:</h3>

@@ -65,6 +65,8 @@ function AddMovie() {
       const data = snapshot.val();
 
       const movies = Object.values(data);
+
+      
       console.log(movies)
       let num = 0
       movies.forEach(element => {
@@ -72,10 +74,10 @@ function AddMovie() {
         setMaxId(num)
       });
 
-
     });
   }, [maxId])
 
+  
 
   const handleDateChange = (date) => {
     setMovieData({
@@ -165,7 +167,8 @@ function AddMovie() {
     }
 
     if (!movieData.trailer) {
-      errorMessages.push("Vui lòng nhập đường dẫn trailer.");
+      // Set a default value for trailer if it is null
+      movieData.trailer = "default_trailer_id";
     }
     // if(){
 

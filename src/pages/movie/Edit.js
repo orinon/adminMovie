@@ -124,10 +124,17 @@ function EditMovie() {
     });
   };
   const extractVideoIdFromUrl = (url) => {
-    // Extract the video ID from a YouTube URL
-    // You can implement your own logic here, for simplicity let's assume it's the last part after '='
-    const urlParams = new URLSearchParams(new URL(url).search);
-    return urlParams.get('v') || '';
+    try {
+      // Kiểm tra xem URL có hợp lệ hay không
+      const validUrl = new URL(url);
+      // Lấy video ID từ URL
+      const urlParams = new URLSearchParams(validUrl.search);
+      return urlParams.get('v') || '';
+    } catch (error) {
+      // Xử lý lỗi khi URL không hợp lệ
+      toast.error("Invalid URL:", error.message);
+      return '';
+    }
   };
   const imageurl = movieData.poster;
   const backdropurl = movieData.backdrop;

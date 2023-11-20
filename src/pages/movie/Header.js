@@ -29,7 +29,7 @@ function Header() {
             </li> */}
             <li className="nav-item">
               <NavLink className="nav-link" to="/add" activeClassName="active">
-                Thêm Dữ Liệu
+                Thêm Movie
               </NavLink>
             </li>
             <li>
