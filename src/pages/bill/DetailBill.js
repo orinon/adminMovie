@@ -32,26 +32,65 @@ const DetailBill = () => {
             setData([]);
         }
       }, [id]);
-      const imageurl = data.poster;
+      
       return (
-        <div className="detail-container">
-          <h1>Chi Tiết Dữ Liệu</h1>
-          <table className="table table-bordered table-hover">
-            <tbody>
-              <tr>
-                <td>
-                  <h3>ID: {id}</h3>
-                  <h3>BillID: {data.billID}</h3>
-                  <h3>Date: {data.date}</h3>
-                  <h3>Day: {data.day}</h3>
-                  {/* Các trường dữ liệu khác tương tự ở đây */}
-                  <img src={imageurl} alt={`Poster for ${data.title}`} />
-                </td>
-              </tr>
-            </tbody>
-          </table>
+        <div className="container mt-5">
+          <div className="card">
+            <div className="card-header">
+              <h1 className="text-center">Chi Tiết Bill</h1>
+            </div>
+            <div className="card-body">
+              <table className="table table-bordered table-hover">
+                <tbody>
+                  <tr>
+                    <td>
+                      {/* <div className="detail-item">
+                        <h3>ID:</h3>
+                        <p>{id}</p>
+                      </div> */}
+                      <div className="detail-item">
+                        <h3>BillID:</h3>
+                        <p>{data.billID}</p>
+                      </div>
+                      <div className="detail-item">
+                        <h3>Phim:</h3>
+                        <p>{data.movieDetail}</p>
+                      </div>
+                      <div className="detail-item">
+                        <h3>Email:</h3>
+                        <p>{data.email}</p>
+                      </div>
+                      <div className="detail-item">
+                        <h3>Ngày:</h3>
+                        <p>{data.date}</p>
+                      </div>
+                      <div className="detail-item">
+                        <h3>Số ghế chọn:</h3>
+                        <p>{data.numberOfSeats}</p>
+                      </div>
+                      <div className="detail-item">
+                        <h3>Chi tiết ghế chọn:</h3>
+                        <p>{data.selectedSeats.join(", ")}</p>
+                      </div>
+                      <div className="detail-item">
+                        <h3>Khung giờ:</h3>
+                        <p>{data.time}</p>
+                      </div>
+                      <div className="detail-item">
+                        <h3>Số tiền:</h3>
+                        <p>{data.total}</p>
+                      </div>
+                      {/* Thêm các trường dữ liệu khác tương tự ở đây */}
+                    
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       );
+      
 }
 
 export default DetailBill

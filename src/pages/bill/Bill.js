@@ -27,10 +27,10 @@ function Main() {
     }
   }, []);
 
-  const handleEdit = (id) => {
-    // Điều hướng đến trang chỉnh sửa với id được chọn
-    navigate(`/EditBill/${id}`); // Sử dụng navigate thay cho history.push
-  };
+  // const handleEdit = (id) => {
+  //   // Điều hướng đến trang chỉnh sửa với id được chọn
+  //   navigate(`/EditBill/${id}`); // Sử dụng navigate thay cho history.push
+  // };
 
   const handleDelete = (id) => {
     // Hiển thị hộp thoại xác nhận
@@ -63,8 +63,8 @@ function Main() {
         <thead className="table-primary">
           <tr>
             <th>Number</th>
-            <th>ID</th>
-            <th>Title</th>
+            <th>BillID</th>
+            <th>Email</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -72,12 +72,13 @@ function Main() {
           {Object.keys(data).map((id, index) => (
             <tr key={id}>
               <td>{index + 1}</td>
-              <td>{id}</td>
+              
               <td>{data[id].billID}</td>
+              <td>{data[id].email}</td>
               <td>
                 <button
                   className="btn btn-outline-primary me-2"
-                  onClick={() => handleEdit(id)}
+                  onClick={() => handleDetail(id)}
                 >
                   Edit
                 </button>
@@ -87,12 +88,12 @@ function Main() {
                 >
                   Delete
                 </button>
-                <button
+                {/* <button
                   className="btn btn-outline-success"
                   onClick={() => handleDetail(id)}
                 >
                   Detail
-                </button>
+                </button> */}
               </td>
             </tr>
           ))}
