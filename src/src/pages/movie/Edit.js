@@ -141,7 +141,7 @@ function EditMovie() {
   const toggleBackdrop = () => {
     setShowBackdrop(!showBackdrop);
   };
-  console.log(movieData.trailer);
+  
   const handleDateChange = (date) => {
     setMovieData({
       ...movieData,

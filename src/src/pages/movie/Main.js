@@ -63,7 +63,7 @@ function Main() {
         <thead className="table-primary">
           <tr>
             <th>Number</th>
-            <th>ID</th>
+            
             <th>Title</th>
             <th>Actions</th>
           </tr>
@@ -72,7 +72,7 @@ function Main() {
           {Object.keys(data).map((id, index) => (
             <tr key={id}>
               <td>{index + 1}</td>
-              <td>{id}</td>
+              
               <td>{data[id].title}</td>
               <td>
                 <button
