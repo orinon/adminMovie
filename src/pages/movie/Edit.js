@@ -49,6 +49,11 @@ function EditMovie() {
     { value:  "Chiến tranh", label: "Chiến tranh"},
     { value:  "Truyền hình", label:  "Truyền hình"},
   ];
+
+  const statusOptions = [
+    { value: "upcoming", label: "Upcoming" },
+    { value: "showing", label: "Showing" },
+  ];
   const {id} =useParams();
   const [selectedGenres, setSelectedGenres] = useState([]);
   const navigate = useNavigate();
@@ -135,6 +140,12 @@ function EditMovie() {
       toast.error("Invalid URL:", error.message);
       return '';
     }
+  };
+  const handleInputChangeStatus = (selectedStatus) => {
+    setMovieData({
+      ...movieData,
+      status: selectedStatus.value,
+    });
   };
   const imageurl = movieData.poster;
   const backdropurl = movieData.backdrop;
@@ -399,7 +410,7 @@ function EditMovie() {
             </div>
           )}
         </div>
-        <div className="mb-3">
+        {/* <div className="mb-3">
           <label htmlFor="status" className="form-label">
             Status:
           </label>
@@ -409,6 +420,16 @@ function EditMovie() {
             name="status"
             value={movieData.status}
             onChange={handleInputChange}
+          />
+        </div> */}
+        <div className="mb-3">
+          <label htmlFor="status" className="form-label">
+            Status:
+          </label>
+          <Select
+            options={statusOptions}
+            value={statusOptions.find((s) => s.value === movieData.status)}
+            onChange={handleInputChangeStatus}
           />
         </div>
         <div className="mb-3">

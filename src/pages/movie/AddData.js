@@ -50,7 +50,12 @@ function AddMovie() {
     { value:  "Truyền hình", label:  "Truyền hình"},
   ];
 
-  const [selectedGenres, setSelectedGenres] = useState([]);
+  const statusOptions = [
+    { value: "upcoming", label: "Upcoming" },
+    { value: "showing", label: "Showing" },
+  ];
+
+  
 
   const extractYouTubeVideoId = (url) => {
     const videoIdRegex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/|^https?:\/\/youtu.be\/)([^"&?\/\s]{11})/;
@@ -139,7 +144,12 @@ function AddMovie() {
     });
   };
 
-  // ...
+  const handleInputChangeStatus = (selectedStatus) => {
+    setMovieData({
+      ...movieData,
+      status: selectedStatus.value,
+    });
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -427,7 +437,7 @@ function AddMovie() {
           )}
         </div>
 
-        <div className="mb-3">
+        {/* <div className="mb-3">
           <label htmlFor="status" className="form-label">
             Status:
           </label>
@@ -439,7 +449,17 @@ function AddMovie() {
             value={movieData.status}
             onChange={handleInputChange}
           />
-        </div>
+        </div> */}
+        <div className="mb-3">
+        <label htmlFor="status" className="form-label">
+          Status:
+        </label>
+        <Select
+          options={statusOptions}
+          value={statusOptions.find((s) => s.value === movieData.status)}
+          onChange={handleInputChangeStatus}
+        />
+      </div>
         <div className="mb-3">
           <label htmlFor="ageRequired" className="form-label">
             Age Required:
